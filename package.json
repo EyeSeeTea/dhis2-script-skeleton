@@ -10,8 +10,8 @@
         "start": "node dist/index.js",
         "prettify": "prettier \"./**/*.{js,jsx,json,css,ts,tsx}\" --write"
     },
-    "author": "EyeSeeTea <arnau@eyeseetea.com>",
-    "license": "MIT",
+    "author": "EyeSeeTea team <info@eyeseetea.com>",
+    "license": "GPL-3.0",
     "dependencies": {
         "@eyeseetea/d2-api": "1.14.0",
         "cmd-ts": "0.13.0",
