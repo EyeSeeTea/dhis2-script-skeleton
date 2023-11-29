@@ -34,7 +34,10 @@ export function checkPostEventsResponse(res: HttpResponse<EventsPostResponse>): 
     const importMessages = _(res.response.importSummaries || [])
         .map(importSummary =>
             importSummary.status !== "SUCCESS"
-                ? _([importSummary.description, ...importSummary.conflicts.map(c => JSON.stringify(c))])
+                ? _([
+                      importSummary.description,
+                      ...importSummary.conflicts.map(c => JSON.stringify(c)),
+                  ])
                       .compact()
                       .join("\n")
                 : null
@@ -43,13 +46,19 @@ export function checkPostEventsResponse(res: HttpResponse<EventsPostResponse>): 
         .value();
 
     if (res.status !== "OK") {
-        const msg = [`POST /events error`, res.message, ...importMessages].join("\n") || "Unknown error";
+        const msg =
+            [`POST /events error`, res.message, ...importMessages].join("\n") || "Unknown error";
         log.error(msg);
     }
 }
 
-export async function getInChunks<T>(ids: Id[], getter: (idsGroup: Id[]) => Promise<T[]>): Promise<T[]> {
-    const objsCollection = await promiseMap(_(ids).chunk(300).value(), idsGroup => getter(idsGroup));
+export async function getInChunks<T>(
+    ids: Id[],
+    getter: (idsGroup: Id[]) => Promise<T[]>
+): Promise<T[]> {
+    const objsCollection = await promiseMap(_(ids).chunk(300).value(), idsGroup =>
+        getter(idsGroup)
+    );
     return _(objsCollection).flatten().value();
 }
 

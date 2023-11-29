@@ -8,7 +8,10 @@ module.exports = {
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/explicit-function-return-type": ["off"],
         "@typescript-eslint/no-this-alias": ["off"],
-        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+        ],
         "@typescript-eslint/no-unused-expressions": ["warn"],
         "no-unused-expressions": "off",
         "no-useless-concat": "off",

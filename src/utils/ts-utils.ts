@@ -41,7 +41,10 @@ export function withOptionalProperties<T>() {
     };
 }
 
-export function groupedPairsBy<Obj, Key>(objs: Obj[], mapper: (obj: Obj) => Key): Array<[Key, Obj[]]> {
+export function groupedPairsBy<Obj, Key>(
+    objs: Obj[],
+    mapper: (obj: Obj) => Key
+): Array<[Key, Obj[]]> {
     const result = new Map<Key, Obj[]>();
 
     objs.forEach(obj => {
@@ -71,16 +74,23 @@ export function getKeys<K extends string>(obj: Record<K, unknown>): K[] {
 
 export type GetRecordId<T extends Record<any, { id: unknown }>> = GetValue<T>["id"];
 
-export function fromPairs<Key extends string, Value>(pairs: Array<[Key, Value]>): Record<Key, Value> {
+export function fromPairs<Key extends string, Value>(
+    pairs: Array<[Key, Value]>
+): Record<Key, Value> {
     const empty = {} as Record<Key, Value>;
     return pairs.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), empty);
 }
 
 export type FromPromise<T> = T extends Promise<infer U> ? U : T;
 
-export type ReplaceReturnType<T extends (...a: any) => any, TNewReturn> = (...a: Parameters<T>) => TNewReturn;
+export type ReplaceReturnType<T extends (...a: any) => any, TNewReturn> = (
+    ...a: Parameters<T>
+) => TNewReturn;
 
-export function assertUnreachable(value: never, message = `No such case in exhaustive switch: ${value}`) {
+export function assertUnreachable(
+    value: never,
+    message = `No such case in exhaustive switch: ${value}`
+) {
     throw new Error(message);
 }
 

@@ -57,7 +57,8 @@ export function getApiUrlOptions() {
 export const AuthString: Type<string, Auth> = {
     async from(str) {
         const [username, password] = str.split(":");
-        if (!username || !password) throw new Error(`Invalid pair: ${str} (expected USERNAME:PASSWORD)`);
+        if (!username || !password)
+            throw new Error(`Invalid pair: ${str} (expected USERNAME:PASSWORD)`);
         return { username, password };
     },
 };
@@ -73,7 +74,8 @@ export const StringsSeparatedByCommas: Type<string, string[]> = {
 export function choiceOf<T extends string>(values: readonly T[]): Type<string, T> {
     return {
         async from(str) {
-            if (!isElementOfUnion<T>(str, values)) throw new Error(`Valid values: ${values.join(",")}`);
+            if (!isElementOfUnion<T>(str, values))
+                throw new Error(`Valid values: ${values.join(",")}`);
             return str;
         },
     };
