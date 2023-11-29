@@ -297,6 +297,16 @@ export class Collection<T> {
         const pairs = this.map(toPairFn).toArray();
         return HashMap.fromPairs(pairs);
     }
+
+    /* Predicates */
+
+    isEmpty(): boolean {
+        return this.xs.length === 0;
+    }
+
+    isNotEmpty(): boolean {
+        return !this.isEmpty();
+    }
 }
 
 type CompareRes = -1 | 0 | 1;
