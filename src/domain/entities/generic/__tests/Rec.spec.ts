@@ -1,6 +1,6 @@
 import { Rec } from "../Rec";
 import { expectTypeOf } from "expect-type";
-import {describe, test, expect} from "vitest"
+import { describe, test, expect } from "vitest";
 
 const rec1 = Rec.from({ x: 1, s: "hello", n: null });
 

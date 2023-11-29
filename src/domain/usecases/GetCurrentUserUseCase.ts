@@ -10,7 +10,7 @@ export class GetCurrentUserUseCase {
     async execute(): Async<User> {
         logger.debug("Fetching user information...");
         const currentUser = await this.userRepository.getCurrent();
-        logger.info(`Current User: ${currentUser.username}`);
+        logger.info(`Current User: id=${currentUser.id}, name=${currentUser.name}`);
         return currentUser;
     }
 }
