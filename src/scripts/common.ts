@@ -14,12 +14,15 @@ function getApiOptionsFromUrl(url: string): { baseUrl: string; auth: Auth } {
     const auth = { username: decode(urlObj.username), password: decode(urlObj.password) };
     return { baseUrl: urlObj.origin + urlObj.pathname, auth };
 }
-type Auth = { username: string; password: string };
+type Auth = {
+    username: string;
+    password: string;
+};
 
-interface D2ApiArgs {
+type D2ApiArgs = {
     url: string;
     auth?: Auth;
-}
+};
 
 export function getD2ApiFromArgs(args: D2ApiArgs): D2Api {
     const { baseUrl, auth } = args.auth
@@ -32,7 +35,7 @@ export function getApiUrlOption(options?: { long: string }) {
     return option({
         type: string,
         long: options?.long ?? "url",
-        description: "http://USERNAME:PASSWORD@HOST:PORT",
+        description: "https://[USERNAME:PASSWORD]@HOST:PORT",
     });
 }
 
@@ -51,54 +54,19 @@ export function getApiUrlOptions() {
     };
 }
 
-export type Pair = [string, string];
-
-export const StringPairSeparatedByDash: Type<string, Pair> = {
-    async from(str) {
-        const [id1, id2] = str.split("-");
-        if (!id1 || !id2) throw new Error(`Invalid pair: ${str} (expected ID1-ID2)`);
-        return [id1, id2];
-    },
-};
-
-export const HierarchyLevel: Type<string, number> = {
-    async from(str) {
-        const n = Number(str);
-        if (!Number.isInteger(n) || n < 0) throw new Error(`Not a valid hierarchy level: ${n}`);
-        return n;
-    },
-};
-
-export const OrgUnitPath: Type<string, string> = {
-    async from(str) {
-        if (!isOrgUnitPath(str)) throw new Error(`Not a dhis2 orgunit path: ${str}`);
-        return str;
-    },
-};
-
-// Return true if str is an organisation unit path.
-// Example of a valid path: "/kbv9iwCpokl/ByqsEM8ZsAz/emI2bZvcq9K"
-function isOrgUnitPath(str: string): boolean {
-    return str.startsWith("/") && str.slice(1).split("/").every(isUid);
-}
-
-// Return true if uid is a valid dhis2 uid.
-// Example of a valid uid: "ByqsEM8ZsAz"
-function isUid(uid: string): boolean {
-    const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split("");
-    const alnum = alpha.concat("0123456789".split(""));
-
-    const isAlpha = (c: string | undefined) => c !== undefined && alpha.includes(c);
-    const areAllAlnum = (str: string) => str.split("").every(c => alnum.includes(c));
-
-    return uid.length === 11 && isAlpha(uid[0]) && areAllAlnum(uid.slice(1));
-}
-
 export const AuthString: Type<string, Auth> = {
     async from(str) {
         const [username, password] = str.split(":");
         if (!username || !password) throw new Error(`Invalid pair: ${str} (expected USERNAME:PASSWORD)`);
         return { username, password };
+    },
+};
+
+export const StringsSeparatedByCommas: Type<string, string[]> = {
+    async from(str) {
+        const values = str.split(",").filter(s => s);
+        if (_(values).isEmpty()) throw new Error("Value cannot be empty");
+        return values;
     },
 };
 

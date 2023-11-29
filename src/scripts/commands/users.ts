@@ -1,17 +1,17 @@
 import { command, subcommands } from "cmd-ts";
 import { UserD2Repository } from "data/UserD2Repository";
-import { getApiUrlOption, getD2Api } from "scripts/common";
+import { getApiUrlOptions, getD2ApiFromArgs } from "scripts/common";
 import { GetCurrentUserUseCase } from "domain/usecases/GetCurrentUserUseCase";
 
 export function getCommand() {
     const currentUser = command({
-        name: "current user",
-        description: "get current user information",
+        name: "Get current user",
+        description: "Get current user information",
         args: {
-            url: getApiUrlOption(),
+            ...getApiUrlOptions(),
         },
         handler: async args => {
-            const api = getD2Api(args.url);
+            const api = getD2ApiFromArgs(args);
             const userRepository = new UserD2Repository(api);
             new GetCurrentUserUseCase(userRepository).execute();
         },
