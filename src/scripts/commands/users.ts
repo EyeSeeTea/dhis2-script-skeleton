@@ -2,6 +2,7 @@ import { command, subcommands } from "cmd-ts";
 import { UserD2Repository } from "data/UserD2Repository";
 import { getApiUrlOptions, getD2ApiFromArgs } from "scripts/common";
 import { GetCurrentUserUseCase } from "domain/usecases/GetCurrentUserUseCase";
+import { TerminalLogger } from "utils/TerminalLogger";
 
 export function getCommand() {
     const currentUser = command({
@@ -10,10 +11,22 @@ export function getCommand() {
         args: {
             ...getApiUrlOptions(),
         },
-        handler: async args => {
+        handler: args => {
             const api = getD2ApiFromArgs(args);
             const userRepository = new UserD2Repository(api);
-            new GetCurrentUserUseCase(userRepository).execute();
+            const getCurrentUser = new GetCurrentUserUseCase(
+                new TerminalLogger(),
+                userRepository
+            ).execute();
+
+            getCurrentUser.run(
+                () => {
+                    console.error("Finished successfully");
+                },
+                error => {
+                    console.error(error);
+                }
+            );
         },
     });
 

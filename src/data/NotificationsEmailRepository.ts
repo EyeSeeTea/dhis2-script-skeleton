@@ -1,10 +1,11 @@
-import nodemailer from "nodemailer";
+import nodemailer, { SentMessageInfo } from "nodemailer";
 import path from "path";
 import dotenv from "dotenv";
 
 import { NotificationsRepository } from "domain/repositories/NotificationsRepository";
 import { Notification } from "domain/entities/Notification";
 import log from "utils/log";
+import { Future, FutureData } from "../domain/entities/generic/Future";
 
 interface SMTPConfig {
     host: string;
@@ -16,7 +17,7 @@ interface SMTPConfig {
 }
 
 export class NotificationsEmailRepository implements NotificationsRepository {
-    async send(notification: Notification): Promise<void> {
+    send(notification: Notification): FutureData<void> {
         const config: SMTPConfig = this.getSMTPConfigFromEnv();
 
         const transport = nodemailer.createTransport({
@@ -29,24 +30,27 @@ export class NotificationsEmailRepository implements NotificationsRepository {
         const { body, subject } = notification;
         log.info(`Send message (${subject}): ${notification.recipients.join(", ")}`);
 
-        const res = await transport.sendMail({
-            to: process.env.RECIPIENTS
-                ? process.env.RECIPIENTS.split(",")
-                : notification.recipients,
-            from: config.sender,
-            subject: subject,
-            bcc: notification.bcc,
-            ...(body.type === "html" ? { html: body.contents } : { text: body.contents }),
-            attachments: notification.attachments.map(attachment => {
-                return {
-                    path: attachment.path,
-                    filename: path.basename(attachment.path),
-                    cid: path.basename(attachment.path),
-                };
-            }),
+        return Future.fromPromise(
+            transport.sendMail({
+                to: process.env.RECIPIENTS
+                    ? process.env.RECIPIENTS.split(",")
+                    : notification.recipients,
+                from: config.sender,
+                subject: subject,
+                bcc: notification.bcc,
+                ...(body.type === "html" ? { html: body.contents } : { text: body.contents }),
+                attachments: notification.attachments.map(attachment => {
+                    return {
+                        path: attachment.path,
+                        filename: path.basename(attachment.path),
+                        cid: path.basename(attachment.path),
+                    };
+                }),
+            })
+        ).map((res: SentMessageInfo) => {
+            log.info(res.response);
+            return undefined;
         });
-
-        log.info(res.response);
     }
 
     private getSMTPConfigFromEnv(): SMTPConfig {

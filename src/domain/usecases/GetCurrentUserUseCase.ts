@@ -1,16 +1,16 @@
-import { Async } from "domain/entities/Async";
 import { User } from "domain/entities/User";
+import { FutureData } from "domain/entities/generic/Future";
+import { Logger } from "domain/logger/Logger";
 import { UserRepository } from "domain/repositories/UserRepository";
 
-import logger from "utils/log";
-
 export class GetCurrentUserUseCase {
-    constructor(private userRepository: UserRepository) {}
+    constructor(private logger: Logger, private userRepository: UserRepository) {}
 
-    async execute(): Async<User> {
-        logger.debug("Fetching user information...");
-        const currentUser = await this.userRepository.getCurrent();
-        logger.info(`Current User: id=${currentUser.id}, name=${currentUser.name}`);
-        return currentUser;
+    execute(): FutureData<User> {
+        this.logger.debug("Fetching user information...");
+        return this.userRepository.getCurrent().map(currentUser => {
+            this.logger.info(`Current User: id=${currentUser.id}, name=${currentUser.name}`);
+            return currentUser;
+        });
     }
 }

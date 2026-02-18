@@ -1,6 +1,6 @@
-import { Async } from "domain/entities/Async";
 import { User } from "domain/entities/User";
+import { FutureData } from "../entities/generic/Future";
 
 export interface UserRepository {
-    getCurrent(): Async<User>;
+    getCurrent(): FutureData<User>;
 }
