@@ -256,6 +256,13 @@ export class Future<E, D> {
 
         return processInParallel(futures);
     }
+
+    static fromPromise<Data>(promise: Promise<Data>): FutureData<Data> {
+        return Future.fromComputation((resolve, reject) => {
+            promise.then(resolve).catch(err => reject(err ? err.message : "Unknown error"));
+            return () => {};
+        });
+    }
 }
 
 export type SequentialAccumulatedData<E, D> =
@@ -307,3 +314,5 @@ export function getJSON<U>(url: string): Future<TypeError | SyntaxError, U> {
 function isNamedError(error: unknown): error is { name: string } {
     return Boolean(error && typeof error === "object" && "name" in error);
 }
+
+export type FutureData<D> = Future<Error, D>;
