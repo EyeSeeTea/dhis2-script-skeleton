@@ -9,6 +9,6 @@ on:
 
 jobs:
     master-workflow:
-      uses: EyeSeeTea/github-workflows/.github/workflows/master.yml@master
+      uses: EyeSeeTea/github-workflows/.github/workflows/master.yml@feature/add_bom_actions
       with:       
         workflows_to_run: "run-tests,codeql-scan,dependency-track-yarn4,dependency-track-syft"
