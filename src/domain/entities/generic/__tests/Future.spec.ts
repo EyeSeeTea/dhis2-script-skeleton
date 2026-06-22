@@ -1,5 +1,6 @@
 import { describe, expect, test, it, vi, expectTypeOf } from "vitest";
-import { Future, ParallelAccumulatedData, SequentialAccumulatedData } from "../Future";
+import { Future } from "../Future";
+import { ParallelAccumulatedData, SequentialAccumulatedData } from "../FutureWithAccumulation";
 
 describe("Basic builders", () => {
     test("Future.success", async () => {
