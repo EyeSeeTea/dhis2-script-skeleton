@@ -51,3 +51,10 @@ To run tests on watch mode:
 ```console
 shell:~$ yarn test --watch
 ```
+
+## Git hooks
+
+Git hooks are managed with [husky](https://typicode.github.io/husky/) and installed automatically when you run `yarn install` (via the `prepare` script):
+
+- **pre-push**: runs `yarn prettify`, `yarn lint` and `yarn test`. The push is aborted if any of them fails.
+- **post-merge**: reinstalls dependencies (`yarn install`) when `yarn.lock` changed in the merge.
