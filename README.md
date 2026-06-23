@@ -1,6 +1,6 @@
 ## Setup
 
-The required node version is v16.14.0. Alternatively, you can run:
+The required node version is v22.22.0. Alternatively, you can run:
 
 ```console
 shell:~$ nvm use
@@ -40,10 +40,10 @@ You can start a build on watch mode:
 shell:~$ yarn build --watch
 ```
 
-Or use `ts-node` to compile and execute:
+Or use `tsx` to compile and execute:
 
 ```console
-shell:~$ npx ts-node src/index.ts [...]
+shell:~$ npx tsx src/index.ts [...]
 ```
 
 To run tests on watch mode:
@@ -51,3 +51,10 @@ To run tests on watch mode:
 ```console
 shell:~$ yarn test --watch
 ```
+
+## Git hooks
+
+Git hooks are managed with [husky](https://typicode.github.io/husky/) and installed automatically when you run `yarn install` (via the `prepare` script):
+
+- **pre-push**: runs `yarn prettify`, `yarn lint` and `yarn test`. The push is aborted if any of them fails.
+- **post-merge**: reinstalls dependencies (`yarn install`) when `yarn.lock` changed in the merge.

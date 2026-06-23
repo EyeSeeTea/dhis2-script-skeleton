@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+yarn prettify && yarn lint && yarn test
